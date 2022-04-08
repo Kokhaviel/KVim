@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'fr.kokhaviel'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = 'fr.kokhaviel.kvim.KVim'
+}
+
+dependencies {
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+}
