@@ -1,14 +1,12 @@
 package fr.kokhaviel.kvim.gui;
 
 import fr.kokhaviel.kvim.api.FileType;
-import fr.kokhaviel.kvim.api.actions.file.KVimNewFile;
-import fr.kokhaviel.kvim.api.actions.file.KVimOpenRecent;
+import fr.kokhaviel.kvim.api.actions.file.*;
 import fr.kokhaviel.kvim.api.gui.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -187,6 +185,35 @@ public class KVimMenuBar extends JMenuBar {
 
 	public void fillFile() {
 		KVimOpenRecent.getRecentsFiles().forEach(openRecBtn::add);
+		openBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimOpen.openFile();
+			}
+		});
+		saveBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimSave.openSaveChooser(curTab);
+			}
+		});
+
+		restartBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimRestart.askRestart();
+				} catch(UnsupportedLookAndFeelException | IOException | InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		quitBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimClose.askExit();
+			}
+		});
 
 		fileBtn.add(newBtn);
 		fileBtn.add(openBtn);
@@ -212,7 +239,6 @@ public class KVimMenuBar extends JMenuBar {
 		fileBtn.add(quitBtn);
 
 		if(curTab.isUntitled()) {
-			saveBtn.setEnabled(false);
 			mvBtn.setEnabled(false);
 			cpBtn.setEnabled(false);
 			reloadBtn.setEnabled(false);

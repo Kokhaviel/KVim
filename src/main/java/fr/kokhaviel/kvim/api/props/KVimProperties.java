@@ -1,8 +1,6 @@
 package fr.kokhaviel.kvim.api.props;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,24 +42,26 @@ public class KVimProperties extends Properties {
 	}
 
 	public void loadProperties() {
+		Path recentFilesPath = Paths.get(propsDir + "/recent.properties");
 		try {
-			recentFilesProperties.load(new FileInputStream(propsDir + "/recent.properties"));
+			recentFilesProperties.load(Files.newInputStream(recentFilesPath));
 		} catch(IOException e) {
 			recentFilesProperties = DefaultKVimProperties.DEFAULT_RECENT_FILES_PROPERTIES;
 			try {
-				recentFilesProperties.store(new FileOutputStream(propsDir + "/recent.properties"), null);
+				recentFilesProperties.store(Files.newOutputStream(recentFilesPath), null);
 			} catch(IOException ex) {
 				ex.printStackTrace();
 			}
 		}
 
+		Path lastParamPath = Paths.get(propsDir + "/last_params.properties");
 		try {
-			lastOpenProperties.load(new FileInputStream(propsDir + "/last_params.properties"));
+			lastOpenProperties.load(Files.newInputStream(lastParamPath));
 		} catch(IOException e) {
 			lastOpenProperties = DefaultKVimProperties.DEFAULT_LAST_OPEN_PROPERTIES;
 
 			try {
-				lastOpenProperties.store(new FileOutputStream(propsDir + "/last_params.properties"), null);
+				lastOpenProperties.store(Files.newOutputStream(lastParamPath), null);
 			} catch(IOException ex) {
 				ex.printStackTrace();
 			}

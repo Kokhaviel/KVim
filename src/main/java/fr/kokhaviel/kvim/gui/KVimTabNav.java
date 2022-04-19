@@ -18,7 +18,7 @@ public class KVimTabNav extends JPanel {
 			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent mouseEvent) {
-					KVimMain.kVimMain.updateTab(index);
+					KVimMain.kVimMain.updateTab(index, false);
 				}
 			});
 		}

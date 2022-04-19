@@ -1,5 +1,6 @@
 package fr.kokhaviel.kvim.api.actions.file;
 
+import fr.kokhaviel.kvim.api.actions.RecentFile;
 import fr.kokhaviel.kvim.api.gui.KVimNewMenuItem;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
 import fr.kokhaviel.kvim.gui.KVimMain;
@@ -31,12 +32,23 @@ public class KVimNewFile {
 	}
 
 	public static void createUntitledTab() {
-		KVimMain.tabs.add(new KVimTab(null, KVimMain.tabs.size()));
-		KVimMain.kVimMain.updateTab(KVimMain.tabs.size() - 1);
+		final KVimTab tab = new KVimTab(null, KVimMain.tabs.size());
+		KVimMain.tabs.add(tab);
+		KVimMain.kVimMain.updateTab(tab.getIndex(), true);
 	}
 
 	public static void createNewTab(String path) {
-		KVimMain.tabs.add(new KVimTab(Paths.get(path), KVimMain.tabs.size()));
-		KVimMain.kVimMain.updateTab(KVimMain.tabs.size() - 1);
+		final Path toPath = Paths.get(path);
+		final KVimTab tab = new KVimTab(toPath, KVimMain.tabs.size());
+		KVimMain.tabs.add(tab);
+		KVimOpen.updateRecent(new RecentFile(toPath.toFile().getName(), toPath.getParent()));
+		KVimMain.kVimMain.updateTab(tab.getIndex(), true);
+	}
+
+	public static void createTabFromFile(String path) throws IOException {
+		final Path toPath = Paths.get(path);
+		KVimTab tab = new KVimTab(toPath, KVimMain.tabs.size());
+		KVimOpen.updateRecent(new RecentFile(toPath.toFile().getName(), toPath.getParent()));
+		tab.setText(KVimOpen.getFileContent(toPath));
 	}
 }

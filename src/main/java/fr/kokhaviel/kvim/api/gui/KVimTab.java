@@ -16,6 +16,7 @@ public class KVimTab extends JTextArea {
 	boolean hasAGitRepo;
 	Path rootProjPath;
 	Path rootGitPath;
+	Path filePath;
 	int index;
 
 	public KVimTab(Path file, int index) {
@@ -26,6 +27,7 @@ public class KVimTab extends JTextArea {
 			hasAGitRepo = false;
 			this.filename = "Untitled";
 		} else {
+			this.filePath = file;
 			this.filename = file.toFile().getName();
 			File parent = file.toFile();
 
@@ -78,6 +80,10 @@ public class KVimTab extends JTextArea {
 		return rootProjPath;
 	}
 
+	public Path getFilePath() {
+		return filePath;
+	}
+
 	public boolean hasAGitRepo() {
 		return hasAGitRepo;
 	}
@@ -89,4 +95,6 @@ public class KVimTab extends JTextArea {
 	public int getIndex() {
 		return index;
 	}
+
+
 }
