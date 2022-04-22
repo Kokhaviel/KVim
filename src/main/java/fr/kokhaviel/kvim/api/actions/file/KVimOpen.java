@@ -4,7 +4,6 @@ import fr.kokhaviel.kvim.KVim;
 import fr.kokhaviel.kvim.api.actions.RecentFile;
 import fr.kokhaviel.kvim.api.gui.KVimFileChooser;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
-import fr.kokhaviel.kvim.api.props.KVimProperties;
 import fr.kokhaviel.kvim.gui.KVimMain;
 
 import javax.swing.*;

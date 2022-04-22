@@ -12,11 +12,8 @@ import java.nio.file.Paths;
 
 public class KVimRecentFile extends JMenuItem {
 
-	Path path;
-
 	public KVimRecentFile(String title, Path path) {
 		super(title);
-		this.path = path;
 		Path tabPath = Paths.get(path + "/" + title);
 		this.addActionListener(new AbstractAction() {
 			@Override

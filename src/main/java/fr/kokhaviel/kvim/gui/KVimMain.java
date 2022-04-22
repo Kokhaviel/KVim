@@ -16,11 +16,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static fr.kokhaviel.kvim.KVim.kVimProperties;
+import static fr.kokhaviel.kvim.api.actions.file.KVimNewFile.createUntitledTab;
 import static fr.kokhaviel.kvim.api.props.DefaultKVimProperties.*;
 
 public class KVimMain extends JFrame {
-
-	private KVimTab currentTabIndex;
 
 	public static List<KVimTab> tabs = new ArrayList<>();
 	public static KVimMain kVimMain;
@@ -56,7 +55,7 @@ public class KVimMain extends JFrame {
 		this.setMinimumSize(new Dimension(480, 325));
 		this.setJMenuBar(new KVimMenuBar(tabs.get(0)));
 		this.getContentPane().add(new KVimTabNav(), BorderLayout.NORTH);
-		this.getContentPane().add(tabs.get(0), BorderLayout.CENTER);
+		this.updateTab(0, true);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new KVimCloseApp());
 		kVimMain = this;
@@ -69,12 +68,12 @@ public class KVimMain extends JFrame {
 
 	public void updateTab(int index, boolean up) {
 		this.getContentPane().removeAll();
+		if(tabs.isEmpty()) createUntitledTab();
 		updateTabNav(index);
 		final KVimTab kVimTab = tabs.get(index);
 		if(up) kVimTab.setCaretPosition(0);
 		JScrollPane sp = new JScrollPane(kVimTab);
 		this.add(sp, BorderLayout.CENTER);
-		this.currentTabIndex = kVimTab;
 		this.getContentPane().revalidate();
 		this.getContentPane().repaint();
 	}

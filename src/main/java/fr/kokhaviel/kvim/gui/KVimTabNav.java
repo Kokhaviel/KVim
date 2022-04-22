@@ -9,11 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KVimTabNav extends JPanel {
 
 	private static class KVimTabButton extends JButton {
-		int index;
 
 		public KVimTabButton(String s, int index) {
 			super(s);
-			this.index = index;
 
 			this.addMouseListener(new MouseAdapter() {
 				@Override

@@ -25,7 +25,6 @@ public class KVimSave {
 	}
 
 	public static void openSaveChooser(KVimTab tab) {
-		System.out.println(tab.isUntitled());
 		if(!tab.isUntitled()) {
 			saveFile(tab.getFilePath(), tab.getText());
 		} else {

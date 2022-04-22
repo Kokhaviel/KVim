@@ -5,8 +5,11 @@ import fr.kokhaviel.kvim.api.actions.file.*;
 import fr.kokhaviel.kvim.api.gui.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,8 +38,6 @@ public class KVimMenuBar extends JMenuBar {
 	JMenuItem mvBtn         = new JMenuItem("Move File");
 	JMenuItem cpBtn         = new JMenuItem("Copy File");
 	JMenuItem reloadBtn     = new JMenuItem("Reload");
-	JMenuItem printBtn      = new JMenuItem("Print");
-	JMenuItem renameBtn     = new JMenuItem("Rename");
 	JMenuItem deleteBtn     = new JMenuItem("Delete");
 	JMenuItem cpPathBtn     = new JMenuItem("Copy File Path");
 	JMenuItem openDirBtn    = new JMenuItem("Open Containing Dir");
@@ -197,6 +198,72 @@ public class KVimMenuBar extends JMenuBar {
 				KVimSave.openSaveChooser(curTab);
 			}
 		});
+		mvBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimFile.moveFile(curTab);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		cpBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimFile.copyFile(curTab);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		deleteBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimFile.deleteFile(curTab);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		reloadBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimReload.reloadFile(curTab);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		cpPathBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(curTab.getFilePath().toString()), null);
+			}
+		});
+		openDirBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					Desktop.getDesktop().open(curTab.getFilePath().toFile().getParentFile());
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		propsBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					new KVimProperties(curTab.getFilePath()).setVisible(true);
+				} catch(IOException | NoSuchAlgorithmException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 
 		restartBtn.addActionListener(new AbstractAction() {
 			@Override
@@ -223,13 +290,9 @@ public class KVimMenuBar extends JMenuBar {
 		fileBtn.addSeparator();
 		fileBtn.add(mvBtn);
 		fileBtn.add(cpBtn);
+		fileBtn.add(deleteBtn);
 		fileBtn.addSeparator();
 		fileBtn.add(reloadBtn);
-		fileBtn.addSeparator();
-		fileBtn.add(printBtn);
-		fileBtn.addSeparator();
-		fileBtn.add(renameBtn);
-		fileBtn.add(deleteBtn);
 		fileBtn.addSeparator();
 		fileBtn.add(cpPathBtn);
 		fileBtn.add(openDirBtn);
@@ -242,7 +305,6 @@ public class KVimMenuBar extends JMenuBar {
 			mvBtn.setEnabled(false);
 			cpBtn.setEnabled(false);
 			reloadBtn.setEnabled(false);
-			renameBtn.setEnabled(false);
 			deleteBtn.setEnabled(false);
 			cpPathBtn.setEnabled(false);
 			openDirBtn.setEnabled(false);

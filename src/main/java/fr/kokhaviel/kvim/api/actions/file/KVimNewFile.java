@@ -45,10 +45,4 @@ public class KVimNewFile {
 		KVimMain.kVimMain.updateTab(tab.getIndex(), true);
 	}
 
-	public static void createTabFromFile(String path) throws IOException {
-		final Path toPath = Paths.get(path);
-		KVimTab tab = new KVimTab(toPath, KVimMain.tabs.size());
-		KVimOpen.updateRecent(new RecentFile(toPath.toFile().getName(), toPath.getParent()));
-		tab.setText(KVimOpen.getFileContent(toPath));
-	}
 }

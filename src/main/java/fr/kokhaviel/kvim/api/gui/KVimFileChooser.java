@@ -1,7 +1,5 @@
 package fr.kokhaviel.kvim.api.gui;
 
-import fr.kokhaviel.kvim.KVim;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;

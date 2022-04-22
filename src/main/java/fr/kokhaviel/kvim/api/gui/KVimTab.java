@@ -1,7 +1,11 @@
 package fr.kokhaviel.kvim.api.gui;
 
+import fr.kokhaviel.kvim.api.actions.file.KVimOpen;
+
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +22,7 @@ public class KVimTab extends JTextArea {
 	Path rootGitPath;
 	Path filePath;
 	int index;
+	String baseText;
 
 	public KVimTab(Path file, int index) {
 		this.index = index;
@@ -29,6 +34,15 @@ public class KVimTab extends JTextArea {
 		} else {
 			this.filePath = file;
 			this.filename = file.toFile().getName();
+
+			if(Files.exists(file)) {
+				try {
+					baseText = KVimOpen.getFileContent(file);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
 			File parent = file.toFile();
 
 			while(parent != null) {
@@ -96,5 +110,11 @@ public class KVimTab extends JTextArea {
 		return index;
 	}
 
+	public String getBaseText() {
+		return baseText;
+	}
 
+	public void setBaseText(String baseText) {
+		this.baseText = baseText;
+	}
 }
