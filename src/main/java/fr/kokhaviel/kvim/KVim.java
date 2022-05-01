@@ -7,7 +7,10 @@ import fr.kokhaviel.kvim.gui.KVimWelcome;
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KVim {
 
@@ -18,7 +21,13 @@ public class KVim {
 		new KVimWelcome().splash(1);
 		KVimMain main;
 		if (args.length >= 1) {
-			main = new KVimMain(Paths.get(args[0]));
+			List<Path> paths = new ArrayList<>();
+
+			for(String arg : args) {
+				paths.add(Paths.get(arg));
+			}
+
+			main = new KVimMain(paths);
 		} else {
 			main = new KVimMain();
 		}

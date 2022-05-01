@@ -29,7 +29,7 @@ public class KVimSave {
 			saveFile(tab.getFilePath(), tab.getText());
 		} else {
 			final KVimSaveChooser kVimFileChooser = new KVimSaveChooser();
-			int ans = kVimFileChooser.showSaveDialog(null);
+			int ans = kVimFileChooser.showSaveDialog(KVimMain.kVimMain);
 
 			if(ans == JFileChooser.APPROVE_OPTION) {
 				File fileToSave = kVimFileChooser.getSelectedFile();

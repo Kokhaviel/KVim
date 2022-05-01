@@ -1,8 +1,10 @@
 package fr.kokhaviel.kvim.api.gui;
 
+import fr.kokhaviel.kvim.api.UndoTool;
 import fr.kokhaviel.kvim.api.actions.file.KVimOpen;
 
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,6 +36,7 @@ public class KVimTab extends JTextArea {
 		} else {
 			this.filePath = file;
 			this.filename = file.toFile().getName();
+			UndoTool.addUndoFunctionality(this);
 
 			if(Files.exists(file)) {
 				try {
@@ -116,5 +119,9 @@ public class KVimTab extends JTextArea {
 
 	public void setBaseText(String baseText) {
 		this.baseText = baseText;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

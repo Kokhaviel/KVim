@@ -36,7 +36,7 @@ public class KVimOpen {
 
 	public static void openFile() {
 		final KVimFileChooser kVimFileChooser = new KVimFileChooser();
-		int ans = kVimFileChooser.showOpenDialog(null);
+		int ans = kVimFileChooser.showOpenDialog(KVimMain.kVimMain);
 
 		if (ans == JFileChooser.APPROVE_OPTION) {
 			File file = kVimFileChooser.getSelectedFile();

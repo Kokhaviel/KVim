@@ -36,7 +36,7 @@ public class KVimFile {
 		if(caller.equals("moveFile")) kVimFileChooser.setDialogTitle("Move a File");
 		else if(caller.equals("copyFile")) kVimFileChooser.setDialogTitle("Copy a File");
 		kVimFileChooser.setCurrentDirectory(srcPath.toFile());
-		int ans = kVimFileChooser.showSaveDialog(null);
+		int ans = kVimFileChooser.showSaveDialog(KVimMain.kVimMain);
 
 		if(ans == JFileChooser.APPROVE_OPTION) {
 			return kVimFileChooser.getSelectedFile();

@@ -4,7 +4,7 @@ import java.net.URL;
 
 public enum FileType {
 
-	UNTITLED   ("Untitled",   "",  ClassLoader.getSystemResource("lang/img/txt.png")),
+	UNTITLED   ("Untitled",   "",     ClassLoader.getSystemResource("lang/img/txt.png")),
 	TEXT       ("Text",       "txt",  ClassLoader.getSystemResource("lang/img/txt.png")),
 	JAVA       ("Java",       "java", ClassLoader.getSystemResource("lang/img/java.png")),
 	KOTLIN     ("Kotlin",     "kt",   ClassLoader.getSystemResource("lang/img/kt.png")),

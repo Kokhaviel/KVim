@@ -17,3 +17,10 @@ application {
 dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 }
+
+jar {
+    manifest {
+        attributes("Manifest-Version": "1.0",
+                "Main-Class": "fr.kokhaviel.kvim.KVim")
+    }
+}

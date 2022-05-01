@@ -21,7 +21,7 @@ public class KVimOpenRecent {
 		return recentFiles;
 	}
 
-	public static List<KVimRecentFile> getRecentsFiles() {
+	public static List<KVimRecentFile> getRecentFiles() {
 		List<KVimRecentFile> recentFiles = new ArrayList<>();
 		getRecents().forEach(recentFile -> recentFiles.add(new KVimRecentFile(recentFile.getName(), recentFile.getPath())));
 

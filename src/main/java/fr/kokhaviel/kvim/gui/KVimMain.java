@@ -3,6 +3,7 @@ package fr.kokhaviel.kvim.gui;
 import fr.kokhaviel.kvim.api.actions.RecentFile;
 import fr.kokhaviel.kvim.api.actions.file.KVimOpen;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
+import fr.kokhaviel.kvim.gui.split.KVimSplitTab;
 
 import javax.swing.*;
 import java.nio.file.Files;
@@ -37,12 +38,15 @@ public class KVimMain extends JFrame {
 		initFrame();
 	}
 
-	public KVimMain(Path file) throws HeadlessException, IOException {
-		super(file.getFileName() + " - KVim");
-		this.file = file;
-		tabs.add(new KVimTab(file, 0));
-		tabs.get(0).setText(KVimOpen.getFileContent(file));
-		KVimOpen.updateRecent(new RecentFile(file.toFile().getName(), file.getParent()));
+	public KVimMain(List<Path> files) throws HeadlessException, IOException {
+		super(files.get(files.size() - 1).getFileName() + " - KVim");
+		final Path lastFile = files.get(files.size() - 1);
+		this.file = lastFile;
+		for(int i = 0; i < files.size(); i++) {
+			tabs.add(new KVimTab(files.get(i), i));
+			tabs.get(i).setText(KVimOpen.getFileContent(files.get(i)));
+		}
+		KVimOpen.updateRecent(new RecentFile(lastFile.toFile().getName(), lastFile.getParent()));
 		initFrame();
 	}
 
@@ -53,9 +57,9 @@ public class KVimMain extends JFrame {
 		this.setLocation(Integer.parseInt(x), Integer.parseInt(y));
 		this.setLayout(new BorderLayout());
 		this.setMinimumSize(new Dimension(480, 325));
-		this.setJMenuBar(new KVimMenuBar(tabs.get(0)));
+		this.setJMenuBar(new KVimMenuBar(tabs.get(tabs.size() - 1)));
 		this.getContentPane().add(new KVimTabNav(), BorderLayout.NORTH);
-		this.updateTab(0, true);
+		this.updateTab(tabs.size() - 1, true);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new KVimCloseApp());
 		kVimMain = this;
@@ -66,14 +70,32 @@ public class KVimMain extends JFrame {
 		this.setJMenuBar(new KVimMenuBar(tabs.get(index)));
 	}
 
+	private void updateIndexes() {
+		for(int i = 0; i < tabs.size(); i++) {
+			tabs.get(i).setIndex(i);
+		}
+	}
 	public void updateTab(int index, boolean up) {
 		this.getContentPane().removeAll();
 		if(tabs.isEmpty()) createUntitledTab();
 		updateTabNav(index);
+		updateIndexes();
 		final KVimTab kVimTab = tabs.get(index);
 		if(up) kVimTab.setCaretPosition(0);
 		JScrollPane sp = new JScrollPane(kVimTab);
 		this.add(sp, BorderLayout.CENTER);
+		this.getContentPane().revalidate();
+		this.getContentPane().repaint();
+	}
+
+	public void updateSplit(int leftIndex, int rightIndex, KVimSplitTab.SplitOrientation orientation) {
+		this.getContentPane().removeAll();
+		this.setJMenuBar(new KVimMenuBar(tabs.get(leftIndex)));
+		updateIndexes();
+		KVimSplitTab.curLeftTab = tabs.get(leftIndex);
+		KVimSplitTab.curRightTab = tabs.get(rightIndex);
+		this.add(new KVimSplitTab(tabs.get(leftIndex), tabs.get(rightIndex),
+				orientation), BorderLayout.CENTER);
 		this.getContentPane().revalidate();
 		this.getContentPane().repaint();
 	}

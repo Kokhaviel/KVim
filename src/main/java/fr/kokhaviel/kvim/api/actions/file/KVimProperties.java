@@ -29,6 +29,7 @@ public class KVimProperties extends JFrame {
 		this.add(initFrame(file));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setResizable(false);
+		this.setIconImage(new ImageIcon(ClassLoader.getSystemResource("kvim/kvim-104x93.png")).getImage());
 		this.pack();
 	}
 

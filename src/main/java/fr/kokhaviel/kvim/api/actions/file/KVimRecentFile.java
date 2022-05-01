@@ -12,8 +12,13 @@ import java.nio.file.Paths;
 
 public class KVimRecentFile extends JMenuItem {
 
+	Path path;
+	String name;
+
 	public KVimRecentFile(String title, Path path) {
 		super(title);
+		this.path = path;
+		this.name = title;
 		Path tabPath = Paths.get(path + "/" + title);
 		this.addActionListener(new AbstractAction() {
 			@Override
@@ -32,5 +37,17 @@ public class KVimRecentFile extends JMenuItem {
 			}
 		});
 
+	}
+
+	public Path getParentPath() {
+		return path;
+	}
+
+	public String getFileName() {
+		return name;
+	}
+
+	public Path getPath() {
+		return Paths.get(getParentPath() + "/" + getFileName());
 	}
 }
