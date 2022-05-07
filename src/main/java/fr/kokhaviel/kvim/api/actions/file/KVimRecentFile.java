@@ -16,7 +16,7 @@ public class KVimRecentFile extends JMenuItem {
 	String name;
 
 	public KVimRecentFile(String title, Path path) {
-		super(title);
+		super(title + "  [" + path.toString() + "]");
 		this.path = path;
 		this.name = title;
 		Path tabPath = Paths.get(path + "/" + title);

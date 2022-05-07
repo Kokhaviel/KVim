@@ -2,10 +2,12 @@ package fr.kokhaviel.kvim.gui;
 
 import fr.kokhaviel.kvim.api.actions.RecentFile;
 import fr.kokhaviel.kvim.api.actions.file.KVimOpen;
+import fr.kokhaviel.kvim.api.gui.KVimProjectExplorer;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
 import fr.kokhaviel.kvim.gui.split.KVimSplitTab;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class KVimMain extends JFrame {
 
 	public static List<KVimTab> tabs = new ArrayList<>();
 	public static KVimMain kVimMain;
+	public static boolean isSplit = false;
 
 	Path file;
 	String height = kVimProperties.getLastParams().getProperty("height");
@@ -86,6 +89,19 @@ public class KVimMain extends JFrame {
 		this.add(sp, BorderLayout.CENTER);
 		this.getContentPane().revalidate();
 		this.getContentPane().repaint();
+		isSplit = false;
+
+		if(KVimMenuBar.isSideBarEnabled) {
+			try {
+				this.getContentPane().add(new KVimSideBar(tabs.get(index)), BorderLayout.SOUTH);
+			} catch(BadLocationException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		if(KVimMenuBar.isProjectBarEnabled) {
+			this.getContentPane().add(new KVimProjectExplorer(tabs.get(index).getRootProjPath().toFile()), BorderLayout.WEST);
+		}
 	}
 
 	public void updateSplit(int leftIndex, int rightIndex, KVimSplitTab.SplitOrientation orientation) {
@@ -94,10 +110,15 @@ public class KVimMain extends JFrame {
 		updateIndexes();
 		KVimSplitTab.curLeftTab = tabs.get(leftIndex);
 		KVimSplitTab.curRightTab = tabs.get(rightIndex);
-		this.add(new KVimSplitTab(tabs.get(leftIndex), tabs.get(rightIndex),
-				orientation), BorderLayout.CENTER);
+		try {
+			this.add(new KVimSplitTab(tabs.get(leftIndex), tabs.get(rightIndex),
+					orientation, KVimMenuBar.isSideBarEnabled), BorderLayout.CENTER);
+		} catch(BadLocationException e) {
+			throw new RuntimeException(e);
+		}
 		this.getContentPane().revalidate();
 		this.getContentPane().repaint();
+		isSplit = true;
 	}
 
 	public class KVimCloseApp extends WindowAdapter {

@@ -3,8 +3,10 @@ package fr.kokhaviel.kvim.gui.split;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
 import fr.kokhaviel.kvim.gui.KVimMain;
 import fr.kokhaviel.kvim.gui.KVimMenuBar;
+import fr.kokhaviel.kvim.gui.KVimSideBar;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -17,7 +19,7 @@ public class KVimSplitTab extends JPanel {
 	public static KVimTab curRightTab;
 	public static SplitOrientation curOrientation;
 
-	public KVimSplitTab(KVimTab leftTab, KVimTab rightTab, SplitOrientation orientation) {
+	public KVimSplitTab(KVimTab leftTab, KVimTab rightTab, SplitOrientation orientation, boolean sideBar) throws BadLocationException {
 
 		curOrientation = orientation;
 		leftTab.addFocusListener(new FocusAdapter() {
@@ -45,10 +47,10 @@ public class KVimSplitTab extends JPanel {
 				return;
 		}
 
-		JPanel leftPanel  = new JPanel(new BorderLayout());
+		JPanel leftPanel = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout());
 
-		JPanel topLeftPanel  = new JPanel(new BorderLayout());
+		JPanel topLeftPanel = new JPanel(new BorderLayout());
 		JPanel topRightPanel = new JPanel(new BorderLayout());
 
 		final JButton leftCloseBtn = new JButton("X");
@@ -77,7 +79,10 @@ public class KVimSplitTab extends JPanel {
 
 		leftPanel.add(topLeftPanel, BorderLayout.NORTH);
 		rightPanel.add(topRightPanel, BorderLayout.NORTH);
-
+		if(sideBar) {
+			leftPanel.add(new KVimSideBar(leftTab), BorderLayout.SOUTH);
+			rightPanel.add(new KVimSideBar(rightTab), BorderLayout.SOUTH);
+		}
 		leftPanel.add(new JScrollPane(leftTab), BorderLayout.CENTER);
 		rightPanel.add(new JScrollPane(rightTab), BorderLayout.CENTER);
 

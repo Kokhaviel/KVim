@@ -2,10 +2,18 @@ package fr.kokhaviel.kvim.api.actions.edit;
 
 import fr.kokhaviel.kvim.api.gui.KVimTab;
 
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class KVimLines {
+
+	public static int getLineNumber(KVimTab tab) throws BadLocationException {
+		return tab.getLineOfOffset(tab.getCaretPosition());
+	}
 
 	public static void deleteLine(KVimTab tab) throws BadLocationException {
 		int offset = tab.getCaretPosition();
@@ -53,6 +61,45 @@ public class KVimLines {
 		System.out.println(toMove);
 		tab.replaceRange("", start - 1, end);
 		tab.insert(toMove + "\n" , insertPos - toMove.length());
+
+	}
+
+	public static void gotoLine(KVimTab tab) throws BadLocationException {
+		JFrame jFrame = new JFrame("Goto Line");
+		JPanel panel = new JPanel();
+		JTextField jtf = new JTextField(String.valueOf(getLineNumber(tab)));
+		JButton ok = new JButton("Ok");
+
+		jFrame.setLocationRelativeTo(null);
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		jtf.setPreferredSize(new Dimension(120, 25));
+		ok.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				try {
+					int lineIndex = Integer.parseInt(jtf.getText());
+
+					tab.setCaretPosition(
+							tab.getDocument().getDefaultRootElement().getElement(lineIndex).getStartOffset());
+
+					jFrame.dispose();
+				} catch(NumberFormatException e) {
+					JOptionPane.showMessageDialog(jFrame, "Please use a real number", "Not a number ...", JOptionPane.ERROR_MESSAGE);
+				}
+
+			}
+		});
+
+		panel.add(new JLabel("Line Number"));
+		panel.add(jtf);
+		panel.add(ok);
+
+		jFrame.add(panel);
+		jFrame.pack();
+
+		jFrame.setVisible(true);
+
 
 	}
 }
