@@ -27,18 +27,6 @@ public class UndoTool {
 		tool.bindRedo(undo);
 	}
 
-	public static JTextArea createJTextAreaWithUndo() {
-		JTextArea area = new JTextArea();
-		addUndoFunctionality(area);
-		return area;
-	}
-
-	public static JTextField createJTextFieldWithUndo() {
-		JTextField field = new JTextField();
-		addUndoFunctionality(field);
-		return field;
-	}
-
 	public UndoManager createAndBindUndoManager() {
 		UndoManager manager = new UndoManager();
 		Document document = component.getDocument();

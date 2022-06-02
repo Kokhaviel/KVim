@@ -5,8 +5,11 @@ import fr.kokhaviel.kvim.api.actions.FileWatcher;
 import fr.kokhaviel.kvim.api.actions.edit.*;
 import fr.kokhaviel.kvim.api.actions.file.*;
 import fr.kokhaviel.kvim.api.actions.todos.KVimTODO;
+import fr.kokhaviel.kvim.api.git.*;
 import fr.kokhaviel.kvim.api.gui.*;
 import fr.kokhaviel.kvim.gui.split.KVimSplitTab;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -17,9 +20,11 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.List;
 import java.util.Timer;
 
 import static fr.kokhaviel.kvim.api.actions.file.KVimNewFile.createUntitledTab;
@@ -130,21 +135,19 @@ public class KVimMenuBar extends JMenuBar {
 
 	//Git Menu
 	JMenuItem gitInitBtn = new JMenuItem("Git Init");
+	JMenuItem gitCloneBtn = new JMenuItem("Git Clone");
 	JMenuItem gitAddBtn = new JMenuItem("Git Add");
-	JMenuItem gitBranchBtn = new JMenuItem("Git Branch");
+	JMenu gitBranchBtn = new JMenu("Git Branch");
+	JMenuItem gitBranchAddBtn = new JMenuItem("Add Branch");
+	JMenuItem gitBranchDelBtn = new JMenuItem("Delete Branch");
 	JMenu gitCheckoutBtn = new JMenu("Git Checkout");
 	JMenuItem gitCommitBtn = new JMenuItem("Git Commit");
 	JMenuItem gitDiffBtn = new JMenuItem("Git Diff");
 	JMenuItem gitFetchBtn = new JMenuItem("Git Fetch");
 	JMenuItem gitLogBtn = new JMenuItem("Git Log");
 	JMenuItem gitMergeBtn = new JMenuItem("Git Merge");
-	JMenuItem gitMvBtn = new JMenuItem("Git Move");
 	JMenuItem gitPullBtn = new JMenuItem("Git Pull");
 	JMenuItem gitPushBtn = new JMenuItem("Git Push");
-	JMenuItem gitRebaseBtn = new JMenuItem("Git Rebase");
-	JMenuItem gitResetBtn = new JMenuItem("Git Reset");
-	JMenuItem gitRestoreBtn = new JMenuItem("Git Restore");
-	JMenuItem gitRevertBtn = new JMenuItem("Git Revert");
 	JMenuItem gitRmBtn = new JMenuItem("Git Remove");
 	JMenuItem gitStatusBtn = new JMenuItem("Git Status");
 	JMenuItem gitTagBtn = new JMenuItem("Git Tag");
@@ -631,30 +634,206 @@ public class KVimMenuBar extends JMenuBar {
 	}
 
 	public void fillGit() {
+		gitInitBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitInit.initRepo(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitCloneBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitClone.cloneRepo();
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitStatusBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitStatus.showStatus(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitLogBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitLog.showLog(curTab);
+				} catch(GitAPIException e) {
+					JOptionPane.showMessageDialog(kVimMain,
+							"No log available : No HEAD exists and no explicit starting revision was specified",
+							"No Log", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+
+		gitAddBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitAdd.addFile(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		gitRmBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitRemoveCached.removeCached(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		gitCommitBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitCommit.commit(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitPushBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitPush.pushCommits(curTab);
+				} catch(GitAPIException | URISyntaxException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitTagBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitTag.tagCommit(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitDiffBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitDiff.showDiffs(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		gitFetchBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitFetch.fetch(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitPullBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitPull.pull(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitBranchAddBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KvimGitBranchAdd.branchAdd(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		gitBranchDelBtn.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimGitBranchDelete.branchDelete(curTab);
+				} catch(GitAPIException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+
+		gitBranchBtn.add(gitBranchAddBtn);
+		gitBranchBtn.add(gitBranchDelBtn);
+
+		if(curTab.hasAGitRepo()) {
+			try {
+				final List<Ref> list = curTab.getGitRepository().branchList().call();
+
+				if(!list.isEmpty()) {
+					list.forEach(ref -> {
+						final JMenuItem jMenuItem = new JMenuItem(ref.getName());
+						jMenuItem.addActionListener(new AbstractAction() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {
+								try {
+									curTab.getGitRepository().checkout().setName(ref.getName()).call();
+								} catch(GitAPIException e) {
+									throw new RuntimeException(e);
+								}
+							}
+						});
+						gitCheckoutBtn.add(jMenuItem);
+					});
+				}
+			} catch(GitAPIException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		gitBtn.add(gitInitBtn);
+		gitBtn.add(gitCloneBtn);
 		gitBtn.addSeparator();
 		gitBtn.add(gitStatusBtn);
 		gitBtn.add(gitLogBtn);
 		gitBtn.addSeparator();
 		gitBtn.add(gitAddBtn);
+		gitBtn.add(gitRmBtn);
 		gitBtn.add(gitCommitBtn);
 		gitBtn.add(gitPushBtn);
 		gitBtn.add(gitTagBtn);
 		gitBtn.add(gitDiffBtn);
 		gitBtn.addSeparator();
 		gitBtn.add(gitFetchBtn);
-		gitBtn.add(gitMergeBtn);
 		gitBtn.add(gitPullBtn);
 		gitBtn.addSeparator();
 		gitBtn.add(gitBranchBtn);
-		gitBtn.add(gitCheckoutBtn);    //TODO : GIT CHECKOUT BRANCH MENU
-		gitBtn.add(gitRebaseBtn);
-		gitBtn.add(gitResetBtn);
-		gitBtn.add(gitRestoreBtn);
-		gitBtn.add(gitRevertBtn);
-		gitBtn.addSeparator();
-		gitBtn.add(gitMvBtn);
-		gitBtn.add(gitRmBtn);
+		gitBtn.add(gitCheckoutBtn);
 
 		if(curTab.isUntitled()) {
 			gitBtn.setEnabled(false);
@@ -664,8 +843,7 @@ public class KVimMenuBar extends JMenuBar {
 			gitInitBtn.setEnabled(false);
 		} else {
 			new ArrayList<>(Arrays.asList(gitStatusBtn, gitLogBtn, gitAddBtn, gitCommitBtn, gitPushBtn, gitTagBtn,
-					gitDiffBtn, gitFetchBtn, gitMergeBtn, gitPullBtn, gitBranchBtn, gitCheckoutBtn, gitRebaseBtn,
-					gitResetBtn, gitRestoreBtn, gitRevertBtn, gitMvBtn, gitRmBtn)).forEach(item -> item.setEnabled(false));
+					gitDiffBtn, gitFetchBtn, gitMergeBtn, gitPullBtn, gitBranchBtn, gitCheckoutBtn)).forEach(item -> item.setEnabled(false));
 		}
 	}
 

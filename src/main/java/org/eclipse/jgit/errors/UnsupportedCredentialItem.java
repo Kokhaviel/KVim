@@ -1,0 +1,21 @@
+/*
+ * Copyright (C) 2010, Christian Halstrick <christian.halstrick@sap.com>,
+ * Copyright (C) 2010, Stefan Lay <stefan.lay@sap.com> and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Distribution License v. 1.0 which is available at
+ * https://www.eclipse.org/org/documents/edl-v10.php.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+package org.eclipse.jgit.errors;
+
+import org.eclipse.jgit.transport.URIish;
+
+public class UnsupportedCredentialItem extends RuntimeException {
+	private static final long serialVersionUID = 1L;
+
+	public UnsupportedCredentialItem(URIish uri, String s) {
+		super(uri.setPass(null) + ": " + s);
+	}
+}

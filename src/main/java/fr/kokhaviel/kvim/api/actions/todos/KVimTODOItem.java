@@ -31,16 +31,8 @@ public class KVimTODOItem implements Serializable {
 		return file;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
 	public String getRelativePath() {
 		return relativePath;
-	}
-
-	public void setRelativePath(String relativePath) {
-		this.relativePath = relativePath;
 	}
 
 	public String getContents() {

@@ -11,15 +11,17 @@ import java.awt.event.MouseEvent;
 
 public class KVimLines {
 
-	public static int getLineNumber(KVimTab tab) throws BadLocationException {
-		return tab.getLineOfOffset(tab.getCaretPosition());
+	public static int getLineNumber(KVimTab tab) {
+		return (tab.getText().split("\n").length + 1);
 	}
 
 	public static void deleteLine(KVimTab tab) throws BadLocationException {
 		int offset = tab.getCaretPosition();
 		int start = Utilities.getRowStart(tab, offset);
 		int end = Utilities.getRowEnd(tab, offset);
-		tab.replaceRange("", start, end);
+		tab.setSelectionStart(start);
+		tab.setSelectionEnd(end);
+		tab.replaceSelection("");
 	}
 
 	public static void duplicateLine(KVimTab tab) throws BadLocationException {
@@ -28,9 +30,11 @@ public class KVimLines {
 		int end = Utilities.getRowEnd(tab, offset);
 
 		if(tab.getSelectedText() != null && !tab.getSelectedText().equals("")) {
-			tab.insert(tab.getSelectedText(), tab.getSelectionEnd());
+			tab.getStyledDocument().insertString(tab.getSelectionEnd(), tab.getSelectedText(), null);
 		} else {
-			tab.insert("\n" + tab.getText(start, end), end);
+			tab.setSelectionStart(start);
+			tab.setSelectionEnd(end);
+			tab.getStyledDocument().insertString(end, "\n" + tab.getSelectedText(), null);
 		}
 	}
 
@@ -44,8 +48,10 @@ public class KVimLines {
 		if(insertPos < 0) insertPos = 0;
 
 		final String toMove = tab.getText(start, end - start);
-		tab.replaceRange("", start - 1, end);
-		tab.insert(toMove + "\n", insertPos);
+		tab.setSelectionStart(start - 1);
+		tab.setSelectionEnd(end);
+		tab.replaceSelection("");
+		tab.getStyledDocument().insertString(insertPos, toMove + "\n", null);
 	}
 
 	public static void swapDownLine(KVimTab tab) throws BadLocationException {
@@ -58,9 +64,10 @@ public class KVimLines {
 		if(insertPos > tab.getText().length()) insertPos = tab.getText().length();
 
 		final String toMove = tab.getText(start, end - start);
-		System.out.println(toMove);
-		tab.replaceRange("", start - 1, end);
-		tab.insert(toMove + "\n" , insertPos - toMove.length());
+		tab.setSelectionStart(start - 1);
+		tab.setSelectionEnd(end);
+		tab.replaceSelection("");
+		tab.getStyledDocument().insertString(insertPos - toMove.length(), toMove + "\n", null);
 
 	}
 

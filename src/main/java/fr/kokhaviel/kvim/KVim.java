@@ -1,8 +1,10 @@
 package fr.kokhaviel.kvim;
 
+import fr.kokhaviel.kvim.api.git.KVimGitInit;
 import fr.kokhaviel.kvim.api.props.KVimProperties;
 import fr.kokhaviel.kvim.gui.KVimMain;
 import fr.kokhaviel.kvim.gui.KVimWelcome;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;

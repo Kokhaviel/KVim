@@ -16,6 +16,7 @@ public class KVimReplace {
 		jFrame.setLayout(new FlowLayout(FlowLayout.CENTER));
 		final JTextField from = new JTextField();
 		final JTextField to = new JTextField();
+		final JCheckBox caseSensitive = new JCheckBox("Case Sensitive ?");
 		final JButton okBtn = new JButton("Replace");
 
 		from.setPreferredSize(new Dimension(120, 25));
@@ -23,6 +24,7 @@ public class KVimReplace {
 		jFrame.add(new JLabel("Text to replace : "));
 		jFrame.add(from);
 		jFrame.add(to);
+		jFrame.add(caseSensitive);
 		jFrame.add(okBtn);
 		jFrame.setLocationRelativeTo(null);
 		jFrame.setResizable(false);
@@ -37,9 +39,15 @@ public class KVimReplace {
 					return;
 				String text = tab.getText();
 				int pos;
-				pos = text.toUpperCase().indexOf(from.getText().toUpperCase());
+				if(caseSensitive.isSelected()) {
+					pos = text.indexOf(from.getText());
+				} else {
+					pos = text.toUpperCase().indexOf(from.getText().toUpperCase());
+				}
 				try {
-					tab.replaceRange("", pos, pos + from.getText().length());
+					tab.setSelectionStart(pos);
+					tab.setSelectionEnd(pos + from.getText().length());
+					tab.replaceSelection(to.getText());
 				} catch(IllegalArgumentException e) {
 					JOptionPane.showMessageDialog(jFrame, "There are no more matches !", "Replace Warning", JOptionPane.WARNING_MESSAGE);
 				}
