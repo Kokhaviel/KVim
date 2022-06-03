@@ -39,7 +39,8 @@ public class KVimNew extends JFrame {
 			public void mouseClicked(MouseEvent mouseEvent) {
 				try {
 					KVimNewFile.createFile(name.getText() + "." + fileType.getExtension(), path.getText());
-					KVimNewFile.createNewTab(name.getText() + "." + fileType.getExtension());
+					KVimNewFile.createNewTab(path.getText() + (path.getText().endsWith("/") ? "" : "/") +
+							name.getText() + "." + fileType.getExtension());
 					KVimNew.this.dispose();
 				} catch(IOException e) {
 					e.printStackTrace();

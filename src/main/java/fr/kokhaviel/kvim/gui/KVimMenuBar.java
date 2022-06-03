@@ -5,8 +5,12 @@ import fr.kokhaviel.kvim.api.actions.FileWatcher;
 import fr.kokhaviel.kvim.api.actions.edit.*;
 import fr.kokhaviel.kvim.api.actions.file.*;
 import fr.kokhaviel.kvim.api.actions.todos.KVimTODO;
+import fr.kokhaviel.kvim.api.actions.tools.KVimTools;
 import fr.kokhaviel.kvim.api.git.*;
-import fr.kokhaviel.kvim.api.gui.*;
+import fr.kokhaviel.kvim.api.gui.KVimMenu;
+import fr.kokhaviel.kvim.api.gui.KVimMenuItem;
+import fr.kokhaviel.kvim.api.gui.KVimNewMenuItem;
+import fr.kokhaviel.kvim.api.gui.KVimTab;
 import fr.kokhaviel.kvim.gui.split.KVimSplitTab;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -23,9 +27,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 import java.util.List;
 import java.util.Timer;
+import java.util.*;
 
 import static fr.kokhaviel.kvim.api.actions.file.KVimNewFile.createUntitledTab;
 import static fr.kokhaviel.kvim.gui.KVimMain.*;
@@ -45,6 +49,7 @@ public class KVimMenuBar extends JMenuBar {
 		}
 	};
 
+	public static boolean isOverwriteModeEnabled;
 	public static boolean isSideBarEnabled;
 	public static boolean isAutoReloadEnabled;
 	public static boolean isProjectBarEnabled;
@@ -61,7 +66,6 @@ public class KVimMenuBar extends JMenuBar {
 	JMenu gitBtn = new JMenu("Git");
 	JMenu toolsBtn = new JMenu("Tools");
 	JMenu projBtn = new JMenu("Projects");
-	JMenu settBtn = new JMenu("Settings");
 	JMenu helpBtn = new JMenu("Help");
 
 	//File Menu
@@ -158,17 +162,12 @@ public class KVimMenuBar extends JMenuBar {
 	JMenuItem capText = new JMenuItem("Capitalize Selection");
 	JMenuItem googleText = new JMenuItem("Google Selection");
 	JMenuItem insUUID = new JMenuItem("Insert Random UUID");
-	JMenuItem compareBtn = new JMenuItem("Diff Files");
 	JMenu checksum = new JMenu("Checksum");
-	JMenuItem termBtn = new JMenuItem("Terminal");
 
-	//Settings Menu
-	JMenuItem confColors = new JMenuItem("Configure Color Scheme");
-	JCheckBox swToolbar = new JCheckBox("Show/Hide Toolbar");
-	JCheckBox swPath = new JCheckBox("Show/Hide Path in Frame Title");
-	JMenuItem confKBMap = new JMenuItem("Configure Keyboard Map");
-	JMenuItem confTb = new JMenuItem("Configure Toolbar");
-	JMenuItem allSett = new JMenuItem("All Settings");
+	JMenuItem md5 = new JMenuItem("MD5");
+	JMenuItem sha1 = new JMenuItem("SHA1");
+	JMenuItem sha256 = new JMenuItem("SHA256");
+	JMenuItem sha512 = new JMenuItem("SHA512");
 
 	//Help Menu
 	JMenuItem whatsThis = new JMenuItem("What's This ?");
@@ -196,9 +195,6 @@ public class KVimMenuBar extends JMenuBar {
 
 		fillTools();
 		this.add(toolsBtn);
-
-		fillSettings();
-		this.add(settBtn);
 
 		fillHelp();
 		this.add(helpBtn);
@@ -382,7 +378,7 @@ public class KVimMenuBar extends JMenuBar {
 		curTab.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent keyEvent) {
-				if(ovrModBtn.isSelected()) {
+				if(isOverwriteModeEnabled) {
 					int i = curTab.getCaretPosition();
 					String tmp = curTab.getText().substring(0, i)
 							+ curTab.getText().substring(i + 1);
@@ -391,6 +387,8 @@ public class KVimMenuBar extends JMenuBar {
 				}
 			}
 		});
+
+		ovrModBtn.addItemListener(itemEvent -> isOverwriteModeEnabled = ovrModBtn.isSelected());
 
 		cutBtn.addActionListener(new AbstractAction() {
 			@Override
@@ -492,7 +490,8 @@ public class KVimMenuBar extends JMenuBar {
 	public void fillView() {
 		swSidebarBtn.setSelected(isSideBarEnabled);
 		autoRlBtn.setSelected(isAutoReloadEnabled);
-		autoRlBtn.setSelected(isProjectBarEnabled);
+		swProjectBar.setSelected(isProjectBarEnabled);
+
 		splVertBtn.addActionListener(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -848,33 +847,102 @@ public class KVimMenuBar extends JMenuBar {
 	}
 
 	public void fillTools() {
+		upText.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.uppercaseSelection(curTab);
+			}
+		});
+
+		lowText.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.lowercaseSelection(curTab);
+			}
+		});
+
+		capText.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.capitalizeSelection(curTab);
+			}
+		});
+
+		googleText.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimTools.googleSelection(curTab);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		insUUID.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				try {
+					KVimTools.genRandomUUID(curTab);
+				} catch(BadLocationException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		md5.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.getMD5Sum(curTab);
+			}
+		});
+
+		sha1.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.getSHA1Sum(curTab);
+			}
+		});
+
+		sha256.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.getSHA256(curTab);
+			}
+		});
+
+		sha512.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				KVimTools.getSHA512Sum(curTab);
+			}
+		});
+
+		checksum.add(md5);
+		checksum.add(sha1);
+		checksum.add(sha256);
+		checksum.add(sha512);
+
 		toolsBtn.add(upText);
 		toolsBtn.add(lowText);
 		toolsBtn.add(capText);
 		toolsBtn.addSeparator();
 		toolsBtn.add(googleText);
 		toolsBtn.addSeparator();
-		toolsBtn.add(compareBtn);
-		toolsBtn.addSeparator();
 		toolsBtn.add(checksum);
 		toolsBtn.addSeparator();
 		toolsBtn.add(insUUID);
-		toolsBtn.addSeparator();
-		toolsBtn.add(termBtn);
-	}
-
-	public void fillSettings() {
-		settBtn.add(allSett);
-		settBtn.addSeparator();
-		settBtn.add(confColors);
-		settBtn.add(confKBMap);
-		settBtn.add(confTb);
-		settBtn.addSeparator();
-		settBtn.add(swPath);
-		settBtn.add(swToolbar);
 	}
 
 	public void fillHelp() {
+
+		about.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				new KVimAbout().setVisible(true);
+			}
+		});
+
 		helpBtn.add(whatsThis);
 		helpBtn.add(reportBug);
 		helpBtn.add(about);

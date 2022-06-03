@@ -1,5 +1,6 @@
 package fr.kokhaviel.kvim.api.gui;
 
+import fr.kokhaviel.kvim.api.FileType;
 import fr.kokhaviel.kvim.api.UndoTool;
 import fr.kokhaviel.kvim.api.actions.file.KVimOpen;
 import org.eclipse.jgit.api.Git;
@@ -26,6 +27,7 @@ public class KVimTab extends JTextPane {
 	int index;
 	String baseText;
 	Git gitRepository;
+	FileType fileType;
 
 	public KVimTab(Path file, int index) {
 		this.index = index;
@@ -34,6 +36,7 @@ public class KVimTab extends JTextPane {
 			isProject = false;
 			hasAGitRepo = false;
 			this.filename = "Untitled";
+			this.fileType = FileType.UNTITLED;
 		} else {
 			this.filePath = file;
 			this.filename = file.toFile().getName();
@@ -53,6 +56,14 @@ public class KVimTab extends JTextPane {
 				parents.add(parent.getParentFile());
 				parent = parent.getParentFile();
 			}
+
+			String[] ss = file.toFile().getName().split("\\.");
+			String ext = ss[ss.length - 1];
+
+			for(FileType type : FileType.values()) {
+				if(type.getExtension().equals(ext)) this.fileType = type;
+			}
+			if(fileType == null) this.fileType = FileType.OTHER;
 
 			parents.forEach(file1 -> {
 				if(file1 == null) return;
@@ -88,6 +99,8 @@ public class KVimTab extends JTextPane {
 					}
 				}
 			});
+
+			this.addKeyListener(new KVimColorize());
 		}
 	}
 
@@ -152,5 +165,7 @@ public class KVimTab extends JTextPane {
 		return rootGitPath;
 	}
 
-
+	public FileType getFileType() {
+		return fileType;
+	}
 }

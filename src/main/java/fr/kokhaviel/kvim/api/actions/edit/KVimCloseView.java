@@ -9,7 +9,7 @@ import static fr.kokhaviel.kvim.gui.KVimMain.tabs;
 public class KVimCloseView {
 
 	public static void closeCurrentView(KVimTab tab) {
-		tab.getGitRepository().close();
+		if(tab.hasAGitRepo()) tab.getGitRepository().close();
 		tabs.remove(tab.getIndex());
 		KVimMain.kVimMain.updateTab(Math.max(tab.getIndex() - 1, 0), false);
 	}
