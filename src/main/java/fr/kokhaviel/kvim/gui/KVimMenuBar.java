@@ -7,8 +7,6 @@ import fr.kokhaviel.kvim.api.actions.file.*;
 import fr.kokhaviel.kvim.api.actions.todos.KVimTODO;
 import fr.kokhaviel.kvim.api.actions.tools.KVimTools;
 import fr.kokhaviel.kvim.api.git.*;
-import fr.kokhaviel.kvim.api.gui.KVimMenu;
-import fr.kokhaviel.kvim.api.gui.KVimMenuItem;
 import fr.kokhaviel.kvim.api.gui.KVimNewMenuItem;
 import fr.kokhaviel.kvim.api.gui.KVimTab;
 import fr.kokhaviel.kvim.gui.split.KVimSplitTab;
@@ -69,10 +67,10 @@ public class KVimMenuBar extends JMenuBar {
 	JMenu helpBtn = new JMenu("Help");
 
 	//File Menu
-	JMenu newBtn = new KVimMenu("New", new ImageIcon(ClassLoader.getSystemResource("menubar/file/new.png")));
-	JMenuItem openBtn = new KVimMenuItem("Open", new ImageIcon(ClassLoader.getSystemResource("menubar/file/open.png")));
-	JMenu openRecBtn = new KVimMenu("Open Recent", new ImageIcon(ClassLoader.getSystemResource("menubar/file/openrecent.png")));
-	JMenuItem saveBtn = new KVimMenuItem("Save", new ImageIcon(ClassLoader.getSystemResource("menubar/file/save.png")));
+	JMenu newBtn = new JMenu("New");
+	JMenuItem openBtn = new JMenuItem("Open");
+	JMenu openRecBtn = new JMenu("Open Recent");
+	JMenuItem saveBtn = new JMenuItem("Save");
 	JMenuItem mvBtn = new JMenuItem("Move File");
 	JMenuItem cpBtn = new JMenuItem("Copy File");
 	JMenuItem reloadBtn = new JMenuItem("Reload");
@@ -173,6 +171,159 @@ public class KVimMenuBar extends JMenuBar {
 	JMenuItem whatsThis = new JMenuItem("What's This ?");
 	JMenuItem reportBug = new JMenuItem("Report Bug ...");
 	JMenuItem about = new JMenuItem("About KVim");
+
+	{
+		fileBtn.setMnemonic('f');
+		editBtn.setMnemonic('e');
+		viewBtn.setMnemonic('v');
+		projBtn.setMnemonic('p');
+		gitBtn.setMnemonic('g');
+		toolsBtn.setMnemonic('t');
+		helpBtn.setMnemonic('h');
+
+		newBtn.setMnemonic('n');
+		openBtn.setMnemonic('o');
+		openRecBtn.setMnemonic('t');
+		saveBtn.setMnemonic('s');
+		mvBtn.setMnemonic('m');
+		cpBtn.setMnemonic('c');
+		reloadBtn.setMnemonic('l');
+		deleteBtn.setMnemonic('d');
+		cpPathBtn.setMnemonic('p');
+		openDirBtn.setMnemonic('e');
+		propsBtn.setMnemonic('f');
+		restartBtn.setMnemonic('r');
+		quitBtn.setMnemonic('q');
+
+		untNew.setMnemonic('u');
+		txtNew.setMnemonic('f');
+		javaNew.setMnemonic('j');
+		ktNew.setMnemonic('k');
+		phpNew.setMnemonic('p');
+		pyNew.setMnemonic('y');
+		htmlNew.setMnemonic('t');
+		cssNew.setMnemonic('d');
+		jsNew.setMnemonic('v');
+		cNew.setMnemonic('c');
+		cppNew.setMnemonic('o');
+		csNew.setMnemonic('a');
+		hNew.setMnemonic('h');
+		sqlNew.setMnemonic('s');
+		shNew.setMnemonic('r');
+		goNew.setMnemonic('g');
+		rbNew.setMnemonic('b');
+
+		cutBtn.setMnemonic('x');
+		copyBtn.setMnemonic('c');
+		pasteBtn.setMnemonic('v');
+		findBtn.setMnemonic('f');
+		rplBtn.setMnemonic('r');
+		symBtn.setMnemonic('s');
+		selAllBtn.setMnemonic('a');
+		deselectBtn.setMnemonic('t');
+		ovrModBtn.setMnemonic('o');
+		delLineBtn.setMnemonic('l');
+		dupLineBtn.setMnemonic('d');
+		swUpBtn.setMnemonic('u');
+		swDownBtn.setMnemonic('w');
+
+		prevTabBtn.setMnemonic('p');
+		nextTabBtn.setMnemonic('n');
+		autoRlBtn.setMnemonic('r');
+		splVertBtn.setMnemonic('v');
+		splHorizBtn.setMnemonic('h');
+		closeCurViewBtn.setMnemonic('c');
+		closeOthViewBtn.setMnemonic('o');
+		swSidebarBtn.setMnemonic('s');
+		gotoLine.setMnemonic('g');
+
+		swProjectBar.setMnemonic('e');
+		todoBtn.setMnemonic('t');
+
+		gitInitBtn.setMnemonic('i');
+		gitCloneBtn.setMnemonic('o');
+		gitAddBtn.setMnemonic('a');
+		gitBranchBtn.setMnemonic('b');
+		gitBranchAddBtn.setMnemonic('a');
+		gitBranchDelBtn.setMnemonic('d');
+		gitCheckoutBtn.setMnemonic('h');
+		gitCommitBtn.setMnemonic('c');
+		gitDiffBtn.setMnemonic('d');
+		gitFetchBtn.setMnemonic('f');
+		gitLogBtn.setMnemonic('l');
+		gitMergeBtn.setMnemonic('m');
+		gitPullBtn.setMnemonic('p');
+		gitPushBtn.setMnemonic('u');
+		gitRmBtn.setMnemonic('r');
+		gitStatusBtn.setMnemonic('s');
+		gitTagBtn.setMnemonic('t');
+
+		upText.setMnemonic('u');
+		lowText.setMnemonic('l');
+		capText.setMnemonic('c');
+		googleText.setMnemonic('g');
+		insUUID.setMnemonic('i');
+		checksum.setMnemonic('s');
+		md5.setMnemonic('m');
+		sha1.setMnemonic('1');
+		sha256.setMnemonic('2');
+		sha512.setMnemonic('5');
+
+		whatsThis.setMnemonic('w');
+		reportBug.setMnemonic('r');
+		about.setMnemonic('a');
+
+		openBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+		saveBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		mvBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK));
+		deleteBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.SHIFT_DOWN_MASK));
+		propsBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK));
+		quitBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+
+		selAllBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
+		cutBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK));
+		copyBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
+		pasteBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK));
+		delLineBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.ALT_DOWN_MASK));
+		dupLineBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
+		swUpBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK));
+		swDownBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK));
+		findBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.ALT_DOWN_MASK));
+		rplBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.ALT_DOWN_MASK));
+
+		prevTabBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK));
+		nextTabBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK));
+		gotoLine.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_DOWN_MASK));
+
+		todoBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK));
+
+		upText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_DOWN_MASK));
+		lowText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+		capText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK));
+		googleText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.ALT_DOWN_MASK));
+		insUUID.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.ALT_DOWN_MASK));
+
+		about.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK));
+
+		reloadBtn.setAccelerator(KeyStroke.getKeyStroke("control shift R"));
+		restartBtn.setAccelerator(KeyStroke.getKeyStroke("control alt R"));
+		splHorizBtn.setAccelerator(KeyStroke.getKeyStroke("control shift H"));
+		splVertBtn.setAccelerator(KeyStroke.getKeyStroke("control shift V"));
+		closeCurViewBtn.setAccelerator(KeyStroke.getKeyStroke("control shift C"));
+		closeOthViewBtn.setAccelerator(KeyStroke.getKeyStroke("control shift O"));
+
+		gitInitBtn.setAccelerator(KeyStroke.getKeyStroke("control alt I"));
+		gitCloneBtn.setAccelerator(KeyStroke.getKeyStroke("control alt O"));
+		gitStatusBtn.setAccelerator(KeyStroke.getKeyStroke("control alt S"));
+		gitLogBtn.setAccelerator(KeyStroke.getKeyStroke("control alt L"));
+		gitAddBtn.setAccelerator(KeyStroke.getKeyStroke("control alt A"));
+		gitCommitBtn.setAccelerator(KeyStroke.getKeyStroke("control alt C"));
+		gitPushBtn.setAccelerator(KeyStroke.getKeyStroke("control alt U"));
+		gitTagBtn.setAccelerator(KeyStroke.getKeyStroke("control alt T"));
+		gitDiffBtn.setAccelerator(KeyStroke.getKeyStroke("control alt D"));
+		gitFetchBtn.setAccelerator(KeyStroke.getKeyStroke("control alt F"));
+		gitPullBtn.setAccelerator(KeyStroke.getKeyStroke("control alt P"));
+	}
 
 	public KVimMenuBar(KVimTab tab) {
 		this.curTab = tab;
@@ -842,7 +993,7 @@ public class KVimMenuBar extends JMenuBar {
 			gitInitBtn.setEnabled(false);
 		} else {
 			new ArrayList<>(Arrays.asList(gitStatusBtn, gitLogBtn, gitAddBtn, gitCommitBtn, gitPushBtn, gitTagBtn,
-					gitDiffBtn, gitFetchBtn, gitMergeBtn, gitPullBtn, gitBranchBtn, gitCheckoutBtn)).forEach(item -> item.setEnabled(false));
+					gitRmBtn, gitDiffBtn, gitFetchBtn, gitMergeBtn, gitPullBtn, gitBranchBtn, gitCheckoutBtn)).forEach(item -> item.setEnabled(false));
 		}
 	}
 
